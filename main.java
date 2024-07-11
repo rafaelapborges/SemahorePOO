@@ -1,4 +1,4 @@
-package com.main.java.semaphore;
+package com.main.java.semaphore
 
 public class Main {
     public static void main(String[] args) {
