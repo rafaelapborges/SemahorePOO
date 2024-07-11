@@ -1,0 +1,149 @@
+package com.main.java.semaphore;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class frmSemaforoDefinitivo extends javax.swing.JFrame implements Runnable {
+    static int Contador1 = 0;
+    static int Contador2 = 0;
+    private javax.swing.JLabel lblSemaforo1;
+    private javax.swing.JLabel lblSemaforo2;
+    private javax.swing.JLabel lblTimer1;
+    private javax.swing.JLabel lblTimer2;
+    private Timer tempo1, tempo2, timerUpdater1, timerUpdater2;
+    private int cycleTime1 = 10; 
+    private int cycleTime2 = 10;
+    
+    public frmSemaforoDefinitivo() {
+        initComponents();
+        this.setSize(1050, 900);
+        this.setLayout(new GridLayout(1, 2)); 
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initComponents() {
+        lblSemaforo1 = new javax.swing.JLabel();
+        lblSemaforo2 = new javax.swing.JLabel();
+        lblTimer1 = new javax.swing.JLabel("10", JLabel.CENTER); 
+        lblTimer2 = new javax.swing.JLabel("10", JLabel.CENTER); 
+
+        JPanel panel1 = new JPanel(new BorderLayout());
+        JPanel panel2 = new JPanel(new BorderLayout());
+        
+        panel1.add(lblTimer1, BorderLayout.NORTH);
+        panel1.add(lblSemaforo1, BorderLayout.CENTER);
+        
+        panel2.add(lblTimer2, BorderLayout.NORTH);
+        panel2.add(lblSemaforo2, BorderLayout.CENTER);
+
+        add(panel1);
+        add(panel2);
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    @Override
+    public void run() {
+        int vel1 = 1 * 1000;
+        int vel2 = 1 * 1000;
+        tempo1 = new Timer();
+        tempo2 = new Timer();
+        timerUpdater1 = new Timer();
+        timerUpdater2 = new Timer();
+
+        TimerTask tarefa1 = new TimerTask() {
+            int countdown1 = cycleTime1;
+
+            @Override
+            public void run() {
+                Icon img1;
+                try {
+                    switch (Contador1) {
+                        case 0:
+                            Contador1 = 1;
+                            img1 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720713987973.png");
+                            break;
+                        case 1:
+                            Contador1 = 2;
+                            img1 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720714010583.png");
+                            break;
+                        default:
+                            Contador1 = 0;
+                            img1 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720714034109.png");
+                            break;
+                    }
+                    lblSemaforo1.setIcon(img1);
+                    lblTimer1.setText(String.valueOf(countdown1));
+                    countdown1 = cycleTime1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        TimerTask tarefa2 = new TimerTask() {
+            int countdown2 = cycleTime2; 
+
+            @Override
+            public void run() {
+                Icon img2;
+                try {
+                    switch (Contador2) {
+                        case 0:
+                            Contador2 = 1;
+                            img2 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720714034109.png");
+                            break;
+                        case 1:
+                            Contador2 = 2;
+                            img2 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720713987973.png");
+                            break;
+                        default:
+                            Contador2 = 0;
+                            img2 = new ImageIcon("C:\\Users\\Felipe\\Downloads\\1720714010583.png");
+                            break;
+                    }
+                    lblSemaforo2.setIcon(img2);
+                    lblTimer2.setText(String.valueOf(countdown2));
+                    countdown2 = cycleTime2;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        TimerTask updateTimer1 = new TimerTask() {
+            int countdown = cycleTime1; 
+            @Override
+            public void run() {
+                lblTimer1.setText(String.valueOf(countdown));
+                countdown--;
+                if (countdown < 0) {
+                    countdown = cycleTime1; 
+                }
+            }
+        };
+
+        TimerTask updateTimer2 = new TimerTask() {
+            int countdown = cycleTime2; 
+            @Override
+            public void run() {
+                lblTimer2.setText(String.valueOf(countdown));
+                countdown--;
+                if (countdown < 0) {
+                    countdown = cycleTime2; 
+                }
+            }
+        };
+
+        tempo1.scheduleAtFixedRate(tarefa1, vel1, cycleTime1 * 1000);
+        tempo2.scheduleAtFixedRate(tarefa2, vel2, cycleTime2 * 1000);
+        timerUpdater1.scheduleAtFixedRate(updateTimer1, 0, 1000); 
+        timerUpdater2.scheduleAtFixedRate(updateTimer2, 0, 1000); 
+    }
+}
